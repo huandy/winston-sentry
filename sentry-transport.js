@@ -80,15 +80,13 @@ Sentry.prototype.log = function (level, msg, meta, callback) {
   }
 
   try {
-    if (level == 'error') {
-      // Support exceptions logging
-      if (meta instanceof Error) {
-        if (msg == '') {
-          msg = meta;
-        } else {
-          meta.message = msg + ". cause: " + meta.message;
-          msg = meta;
-        }
+    // Support exceptions logging
+    if (level === 'error' && meta instanceof Error) {
+      if (msg === '') {
+        msg = meta;
+      } else {
+        meta.message = msg + '. cause: ' + meta.message;
+        msg = meta;
       }
 
       Raven.captureException(msg, extra, function() {
